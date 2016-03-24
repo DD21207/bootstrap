@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        .box{
+            float: left;
+            background-color: white;
+            width: 44%;
+            margin-left: 3%;
+            margin-right: 3%;
+            box-shadow: 0 0 5px #ccc;
+            position: relative;
+        }
+        .box img{
+            width: 100%;
+        }
+    </style>
+    <script>
+        $(document).ready(function(){
+            $(window).on("load",function(){
+                imgLocation();
+                var dataImg={"data":[{"src":"b1.jpg"},{"src":"b2.jpg"},{"src":"b3.jpg"},{"src":"b4.jpg"},{"src":"1.jpg"}]};
+                window.onScroll = function(){
+                    if(scrollSide()){
+                        $.each(dataImg.data,function(index,value){
+                            var box = $("<div>").addClass("box").appendTo($("#container"));
+                            $("<img>").attr("src","./img/"+$(value).attr("src")).appendTo($(".box"));
+                        });
+                        imgLocation();
+                    }
+            }
+        });
+
+        function imgLocation() {
+            var boxArr = $('.box');
+            var HeightArr = [];
+            var boxWidth = boxArr.eq(0).width();
+            var num = Math.floor($(window).width() / boxWidth);
+
+
+            boxArr.each(function (index, item) {
+                var boxHeight = boxArr.eq(index).height();
+                if (index < num) {
+                    HeightArr[index] = boxHeight;
+                } else {
+                    var minHeight = Math.min.apply(null, HeightArr);
+                    console.log(minHeight);
+                    var minHeightIndex = $.inArray(minHeight, HeightArr);
+                    console.log(minHeightIndex);
+
+                    $(item).css({
+                        position: 'absolute',
+                        top: minHeight,
+                        left: boxArr.eq(minHeightIndex).position().left
+                    });
+
+                    HeightArr[minHeightIndex] += boxArr.eq(index).height();
+                }
+            });
+        }
+            function scrollSide(){
+                var boxArr = $('.box');
+                var lastboxHeight = boxArr.last().get(0).offsetTop + Math.floor(boxArr.last().height() / 2);
+                var documentHeight = $(document).width();
+                var scrollHeight = $(window).scrollTop();
+                return (lastboxHeight < scrollHeight + documentHeight) ? true : false;
+            }
+        })
+
+    </script>
+</head>
+<body>
+<div id="container">
+    <div class="box">
+        <img class="img" src="img/b1.jpg" height="150px"/>
+        <div class="desc">Description</div>
+    </div>
+    <div class="box">
+        <img class="img" src="img/b2.jpg"  height="168px"/>
+        <div class="desc">Description</div>
+    </div>
+    <div class="box">
+        <img class="img" src="img/b3.jpg" height="168px"/>
+        <div class="desc">Description</div>
+    </div>
+    <div class="box">
+        <img class="img" src="img/b4.jpg"  height="200px"/>
+        <div class="desc">Description</div>
+    </div>
+    <div class="box">
+        <img class="img" src="img/1.jpg"  height="200px"/>
+        <div class="desc">Description</div>
+    </div>
+    <div class="box">
+        <img class="img" src="img/2.jpg"  height="150px"/>
+        <div class="desc">Description</div>
+    </div>
+</div>
+</body>
+</html>
